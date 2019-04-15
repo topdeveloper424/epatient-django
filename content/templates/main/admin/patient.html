@@ -1,0 +1,798 @@
+{% extends 'layouts/admin/main.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<div class="container-fluid">
+        <div class="row  ">
+            <div class="col-12">
+
+                <h1>Patients</h1>
+                <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                    <ol class="breadcrumb pt-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">User Management</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Patient</a>
+                        </li>
+                    </ol>
+                </nav>
+                <div class="separator mb-5"></div>
+
+
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-success btn-xs mb-1" onclick="addPatient()">Add New</button>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="searchFirstName" placeholder="First Name">
+                </div>    
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="searchLastName" placeholder="Last Name">
+                </div>    
+            
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                        <button type="button" class="btn btn-success btn-xs mb-1" onclick="searchModal()">Search by Birthday</button>
+                </div>
+                
+            </div>
+        
+
+
+        <div class="row">
+            <div class="col-12 list" id="patients_container">
+                    <br>
+
+                    {% if user %}
+                    {% for user in users %}
+        
+                    <div class="card d-flex flex-row mb-3">
+                            <div class="d-flex flex-grow-1 min-width-zero">
+                                <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                                    <a onclick="gotoPatientPage({{user.pk}})" style="cursor:pointer">
+                                            <p class="mb-1 text-muted text-small w-10 w-xs-100"><span class="badge badge-pill badge-secondary">{{user.first_name}}  {{user.last_name}}</span></p>
+                                    </a>
+                                    <p class="mb-1 text-muted text-small w-10 w-xs-100">{{user.useremail}}</p>
+                                    <p class="mb-1 text-muted text-small w-10 w-xs-100">{{user.birthday}}</p>
+                                    <p class="mb-1 text-muted text-small w-10 w-xs-100">{% if user.gender == 'M' %} Male {% else %} Female {% endif %}</p>
+                                    <p class="mb-1 text-muted text-small w-5 w-xs-50"><button type="button" class="btn btn-warning btn-xs mb-1" onclick="editPatient({{user.pk}})">edit/details</button></p>
+                                    <p class="mb-1 text-muted text-small w-5 w-xs-50"><button type="button" class="btn btn-dark btn-xs mb-1" onclick="resetPass({{user.pk}})">reset password</button></p>
+                                    <p class="mb-1 text-muted text-small w-5 w-xs-50"><button type="button" class="btn btn-danger btn-xs mb-1" onclick="blockPatient({{user.pk}})">block</button></p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+        
+            </div>
+            
+        </div>
+
+        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalContentLabel">Search by birthday</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="curPatient">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Year:</b></label>
+                                <input type="text" class="form-control" id="searchYear" placeholder="Year" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Month:</b></label>
+                                <input type="text" class="form-control" id="searchMonth" placeholder="Month" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Day:</b></label>
+                                <input type="text" class="form-control" id="searchDay" placeholder="Day" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" onclick="search()">Search</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">New Patient</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>First Name:</b></label>
+                                            <input class="form-control" id="addFirstName" placeholder="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Last Name:</b></label>
+                                            <input class="form-control" id="addLastName" placeholder="name">
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Password:</b></label>
+                                            <input class="form-control" type="password" id="addPassword" placeholder="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Confirm Password:</b></label>
+                                            <input class="form-control" type="password" id="addConfirm" placeholder="name">
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-md-5">
+                                            <div class="form-group">
+                                                    <label for="message-text" class="col-form-label"><b>What is your date of birth?</b></label>
+                                                    <label for="message-text" class="col-form-label">For example: 31 12 1970</label>
+                                            </div>
+                                        </div>
+    
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Day:</b></label>
+                                            <input class="form-control" type="text" id="addDay" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                                <label for="message-text" class="col-form-label"><b>Month:</b></label>
+                                                <input class="form-control" type="text" id="addMonth" placeholder="MM">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                                <label for="message-text" class="col-form-label"><b>Year:</b></label>
+                                                <input class="form-control" type="text" id="addYear" placeholder="YYYY">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Gender:</b></label>
+                                            <select class="form-control" id="addGender">
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Email:</b></label>
+                                            <input class="form-control" id="addEmail" type="email" placeholder="email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Phone Number:</b></label>
+                                            <input class="form-control" id="addPhoneNumber" placeholder="Phone number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Postcode:</b></label>
+                                            <input class="form-control" id="addPostcode" placeholder="postcode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Address:</b></label>
+                                            <input class="form-control" id="addAddress" placeholder="address">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Practice</b></label>
+                                            <textarea class="form-control" id="addPractice"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="addNew()">Add</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="modal fade" id="patientModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">Patient Information</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="curPatient">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>First Name:</b></label>
+                                            <input class="form-control" id="infoFirstName" placeholder="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Last Name:</b></label>
+                                            <input class="form-control" id="infoLastName" placeholder="name">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                            <div class="form-group">
+                                                    <label for="message-text" class="col-form-label"><b>What is your date of birth?</b></label>
+                                                    <label for="message-text" class="col-form-label">For example: 31 12 1970</label>
+                                            </div>
+                                        </div>
+    
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Day:</b></label>
+                                            <input class="form-control" type="text" id="infoDay" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                                <label for="message-text" class="col-form-label"><b>Month:</b></label>
+                                                <input class="form-control" type="text" id="infoMonth" placeholder="MM">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                                <label for="message-text" class="col-form-label"><b>Year:</b></label>
+                                                <input class="form-control" type="text" id="infoYear" placeholder="YYYY">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Gender:</b></label>
+                                            <select class="form-control" id="infoGender">
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                            </select> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Email:</b></label>
+                                            <input class="form-control" id="infoEmail" type="email" placeholder="email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Phone Number:</b></label>
+                                            <input class="form-control" id="infoPhoneNumber" placeholder="Phone number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Postcode:</b></label>
+                                            <input class="form-control" id="infoPostcode" placeholder="postcode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Address:</b></label>
+                                            <input class="form-control" id="infoAddress" placeholder="address">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Practice</b></label>
+                                            <textarea class="form-control" id="infoPractice"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="saveInfo()">Save</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
+                <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">Reset Password</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="resetPatient">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>New Password:</b></label>
+                                            <input type="password" class="form-control" id="newPass" placeholder="new password" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="message-text" class="col-form-label"><b>Confrim:</b></label>
+                                            <input type="password" class="form-control" id="confirmPass" placeholder="confrim password" required>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="savePass()">Save</button>
+                                &nbsp;
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+</div>
+<script>
+    localStorage.tab = 1;
+
+    function searchModal(){
+        $("#searchYear").val("");
+        $("#searchMonth").val("");
+        $("#searchDay").val("");
+        $("#searchModal").modal();
+
+    }
+
+    function search(){
+        var year = $("#searchYear").val();
+        var month = $("#searchMonth").val();
+        var day = $("#searchDay").val();
+        if(year == ""){
+            alert("type Year!");
+            return;
+        }
+        if(year.length != 4 || month.length > 2 || day.length > 2){
+            alert("type correct birthday !");
+            return;
+        }
+        if(month != ""){
+            if(Number(month) > 12){
+                alert("type correct month !");
+                return;
+            }
+        }
+        if(day != ""){
+            if(Number(day) > 31){
+                alert("type correct day !");
+                return;
+            }
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:search_patients' %}",
+            data: {year:year,month:month,day:day },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data !=""){
+                    var jsondata = JSON.parse(data);
+                    var html = "<br>";
+                    for(var i = 0; i < jsondata.length; i ++){
+                        var model = jsondata[i];
+                        var gender = "Male";
+                        if(model.fields.gender == 'F'){
+                            gender = "Female";
+                        }
+                        html += "                    <div class=\"card d-flex flex-row mb-3\">\n" +
+            "                            <div class=\"d-flex flex-grow-1 min-width-zero\">\n" +
+            "                                <div class=\"card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center\">\n" +
+            "                                    <a onclick=\"gotoPatientPage("+model.pk+")\" style=\"cursor:pointer\"><p class=\"mb-1 text-muted text-small w-10 w-xs-100\"><span class=\"badge badge-pill badge-secondary\">"+model.fields.first_name+" "+model.fields.last_name+"</span></p></a>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.useremail+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.birthday+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+gender+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-5 w-xs-50\"><button type=\"button\" class=\"btn btn-warning btn-xs mb-1\" onclick=\"editPatient("+model.pk+")\">edit/details</button></p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-5 w-xs-50\"><button type=\"button\" class=\"btn btn-danger btn-xs mb-1\" onclick=\"blockPatient("+model.pk+")\">block</button></p>\n" +
+            "                                </div>\n" +
+            "                            </div>\n" +
+            "                        </div>\n";
+
+                    }
+
+                    $("#patients_container").html(html);
+                }else{
+                    $("#patients_container").html("");
+                }
+
+                $("#searchModal").modal('hide');
+                
+            }
+        });
+
+    }
+
+    function searchByNames(){
+        var first_name = $("#searchFirstName").val();
+            var last_name = $("#searchLastName").val();
+            $.ajax({
+            type: "GET",
+            url: "{% url 'main:search_patients_name' %}",
+            data: {first_name:first_name, last_name:last_name },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data !=""){
+                    var jsondata = JSON.parse(data);
+                    var html = "<br>";
+                    for(var i = 0; i < jsondata.length; i ++){
+                        var model = jsondata[i];
+                        var gender = "Male";
+                        if(model.fields.gender == 'F'){
+                            gender = "Female";
+                        }
+                        html += "                    <div class=\"card d-flex flex-row mb-3\">\n" +
+            "                            <div class=\"d-flex flex-grow-1 min-width-zero\">\n" +
+            "                                <div class=\"card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center\">\n" +
+            "                                    <a onclick=\"gotoPatientPage("+model.pk+")\" style=\"cursor:pointer\"><p class=\"mb-1 text-muted text-small w-10 w-xs-100\"><span class=\"badge badge-pill badge-secondary\">"+model.fields.first_name+" "+model.fields.last_name+"</span></p></a>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.useremail+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.birthday+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+gender+"</p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-5 w-xs-50\"><button type=\"button\" class=\"btn btn-warning btn-xs mb-1\" onclick=\"editPatient("+model.pk+")\">edit/details</button></p>\n" +
+            "                                    <p class=\"mb-1 text-muted text-small w-5 w-xs-50\"><button type=\"button\" class=\"btn btn-danger btn-xs mb-1\" onclick=\"blockPatient("+model.pk+")\">block</button></p>\n" +
+            "                                </div>\n" +
+            "                            </div>\n" +
+            "                        </div>\n";
+
+                    }
+
+                    $("#patients_container").html(html);
+                }else{
+                    $("#patients_container").html("");
+                }
+
+                $("#searchModal").modal('hide');
+                
+            }
+        });
+
+    }
+    $("#searchFirstName").on('keyup',function (e) {
+        if(e.keyCode == 13){
+            searchByNames();
+        }
+    });
+
+    $("#searchLastName").on('keyup',function (e) {
+        if(e.keyCode == 13){
+            searchByNames();
+        }
+    });
+
+    function editPatient(pk){
+
+        $("#curPatient").val(pk);
+
+        $("#infoFirstName").val("");
+        $("#infoLastName").val("");
+        $("#infoDay").val("");
+        $("#infoMonth").val("");
+        $("#infoYear").val("");
+        $("#infoGender").val("");
+        $("#infoEmail").val("");
+        $("#infoPhoneNumber").val("");
+        $("#infoPostcode").val("");
+        $("#infoAddress").val("");
+        $("#infoPractice").val("");
+
+        $("#patientModal").modal();
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:get_userinfo' %}",
+            data: {pk:pk },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data !=""){
+                    var jsondata = JSON.parse(data);
+                    $("#infoFirstName").val(jsondata[0].fields.first_name);
+                    $("#infoLastName").val(jsondata[0].fields.last_name);
+
+                    var birthday = jsondata[0].fields.birthday;
+                    var birth_array = birthday.split("-");
+                    $("#infoYear").val(birth_array[0]);
+                    $("#infoMonth").val(birth_array[1]);
+                    $("#infoDay").val(birth_array[2]);
+
+                    $("#infoGender").val(jsondata[0].fields.gender);
+                    $("#infoEmail").val(jsondata[0].fields.useremail);
+                    $("#infoPhoneNumber").val(jsondata[0].fields.phone_number);
+                    $("#infoPostcode").val(jsondata[0].fields.postcode);
+                    $("#infoAddress").val(jsondata[0].fields.address);
+                    $("#infoPractice").val(jsondata[0].fields.practice);
+
+                }
+            }
+        });
+    }
+
+    function saveInfo(){
+        var pk = $("#curPatient").val();
+
+        var first_name = $("#infoFirstName").val();
+        var last_name = $("#infoLastName").val();
+        var gender = $("#infoGender").val();
+        var email = $("#infoEmail").val();
+        var phone = $("#infoPhoneNumber").val();
+        var postcode = $("#infoPostcode").val();
+        var address = $("#infoAddress").val();
+        var practice = $("#infoPractice").val();
+        
+        var day = $("#infoDay").val();
+        var month = $("#infoMonth").val();
+        var year = $("#infoYear").val();
+        if(day.length != 2){
+            alert("type correct day !");
+            return;
+        }
+
+        if(month.length != 2){
+            alert("type correct month !");
+            return;
+        }
+        if(year.length != 4){
+            alert("type correct year !");
+            return;
+        }
+
+        var birth = new Date(year + "-" + month + "-" + day);
+        if(isNaN(birth.getTime())){
+            alert("invalid date !");
+            return;
+        }
+
+        var mon = birth.getMonth() + 1
+        var birthday = birth.getFullYear() + "-" + mon + "-" + birth.getDate();
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:save_userinfo' %}",
+            data: {pk:pk,first_name:first_name,last_name:last_name,birthday:birthday,gender:gender,email:email,phone:phone,postcode:postcode,address:address,practice:practice },
+            dataType: 'json',
+            success: function (data) {
+                $("#patientModal").modal('hide');
+                if(data.status == "error"){
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+
+            }
+        });
+    }
+
+    function blockPatient(pk){
+        $.sweetModal.confirm('Confirm please?', function () {
+            $.ajax({
+            type: "GET",
+            url: "{% url 'main:block_user' %}",
+            data: {pk:pk },
+            dataType: 'json',
+            success: function (data) {
+                $("#patientModal").modal('hide');
+                if(data.status == "error"){
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+
+            }
+        });
+        });
+
+    }
+
+    function addPatient(){
+        $("#addFirstName").val("");
+        $("#addLastName").val("");
+
+        $("#addDay").val("");
+        $("#addMonth").val("");
+        $("#addYear").val("");
+        $("#addGender").val("");
+        $("#addEmail").val("");
+        $("#addPhoneNumber").val("");
+        $("#addPostcode").val("");
+        $("#addAddress").val("");
+        $("#addPractice").val("");
+
+        $("#addModal").modal();
+    }
+
+    function addNew(){
+
+        var first_name = $("#addFirstName").val();
+        var last_name = $("#addLastName").val();
+        var password = $("#addPassword").val();
+        var confirm = $("#addConfirm").val();
+        var gender = $("#addGender").val();
+        var email = $("#addEmail").val();
+        var phone = $("#addPhoneNumber").val();
+        var postcode = $("#addPostcode").val();
+        var address = $("#addAddress").val();
+        var practice = $("#addPractice").val();
+
+        var day = $("#addDay").val();
+        var month = $("#addMonth").val();
+        var year = $("#addYear").val();
+        if(day.length != 2){
+            alert("type correct day !");
+            return;
+        }
+
+        if(month.length != 2){
+            alert("type correct month !");
+            return;
+        }
+        if(year.length != 4){
+            alert("type correct year !");
+            return;
+        }
+
+        var birth = new Date(year + "-" + month + "-" + day);
+        if(isNaN(birth.getTime())){
+            alert("invalid date !");
+            return;
+        }
+
+        var mon = birth.getMonth() + 1
+        var birthday = birth.getFullYear() + "-" + mon + "-" + birth.getDate()
+
+
+
+
+        if(first_name == "" || last_name == "" || password == "" || birthday == "" || gender == "" || email=="" || phone =="" || postcode == "" || address == "" || practice ==""){
+            alert("Fill all fields !");
+            return;
+
+        }
+
+        if(password != confirm){
+            alert("password doesn't match!");
+            return;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:add_patient' %}",
+            data: {first_name:first_name,last_name:last_name,password:password,birthday:birthday,gender:gender,email:email,phone:phone,postcode:postcode,address:address,practice:practice },
+            dataType: 'json',
+            success: function (data) {
+                $("#patientModal").modal('hide');
+                if(data.status == "error"){
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+
+            }
+        });
+
+    }
+
+
+    function gotoPatientPage(pk) {
+        window.open("{% url 'main:patient_info_user_admin' %}?pk=" + pk);
+    }
+
+    function resetPass(pk){
+        $("#newPass").val("");
+        $("#confirmPass").val("");
+        $("#resetPatient").val(pk);
+
+        $("#resetModal").modal();
+    }
+
+    function savePass(){
+        var pk = $("#resetPatient").val();
+        var password = $("#newPass").val();
+        var confirm = $("#confirmPass").val();
+
+        if(password.trim() == "" || confirm.trim() == ""){
+            alert("type correct password !");
+            return;
+        }
+
+        if(password != confirm){
+            alert("password not matched !");
+            return;
+        }
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:change_password' %}",
+            data: {pk:pk, password:password },
+            dataType: 'json',
+            success: function (data) {
+                $("#resetModal").modal('hide');
+                if(data.status != "error"){
+                    $.sweetModal({
+                        content: 'Successfully set!.',
+                        icon: $.sweetModal.ICON_SUCCESS,
+                        buttons: [
+                            {
+                                label: 'OK',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+    
+
+    </script>
+{% endblock %}

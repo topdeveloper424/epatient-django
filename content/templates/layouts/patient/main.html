@@ -1,0 +1,381 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>E-Patient</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{% static 'font/iconsmind/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'font/simple-line-icons/css/simple-line-icons.css' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/fullcalendar.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/dataTables.bootstrap4.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/datatables.responsive.bootstrap4.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/select2.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/perfect-scrollbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/owl.carousel.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-stars.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/nouislider.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-datepicker3.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/jquery.sweet-modal.min.css'%}" />
+
+    <script src="{% static 'js/vendor/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/vendor/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/vendor/chartjs-plugin-datalabels.js' %}"></script>
+    <script src="{% static 'js/vendor/moment.min.js' %}"></script>
+    <script src="{% static 'js/vendor/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'js/vendor/datatables.min.js' %}"></script>
+    <script src="{% static 'js/vendor/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'js/vendor/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/vendor/progressbar.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.barrating.min.js' %}"></script>
+    <script src="{% static 'js/vendor/select2.full.js' %}"></script>
+    <script src="{% static 'js/vendor/nouislider.min.js' %}"></script>
+    <script src="{% static 'js/vendor/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/vendor/Sortable.js' %}"></script>
+    <script src="{% static 'js/vendor/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/dore.script.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/jquery.sweet-modal.min.js' %}"></script>
+
+
+
+</head>
+
+<body id="app-container" class="menu-default show-spinner">
+    <nav class="navbar fixed-top">
+        <div class="d-flex align-items-center navbar-left">
+            <a href="#" class="menu-button d-none d-md-block">
+                <svg class="main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 17">
+                    <rect x="0.48" y="0.5" width="7" height="1" />
+                    <rect x="0.48" y="7.5" width="7" height="1" />
+                    <rect x="0.48" y="15.5" width="7" height="1" />
+                </svg>
+                <svg class="sub" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 17">
+                    <rect x="1.56" y="0.5" width="16" height="1" />
+                    <rect x="1.56" y="7.5" width="16" height="1" />
+                    <rect x="1.56" y="15.5" width="16" height="1" />
+                </svg>
+            </a>
+
+            <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 17">
+                    <rect x="0.5" y="0.5" width="25" height="1" />
+                    <rect x="0.5" y="7.5" width="25" height="1" />
+                    <rect x="0.5" y="15.5" width="25" height="1" />
+                </svg>
+            </a>
+
+            <div class="search" data-search-path="Layouts.Search.html?q=">
+                <input placeholder="Search...">
+                <span class="search-icon">
+                    <i class="simple-icon-magnifier"></i>
+                </span>
+            </div>
+        </div>
+
+
+        <a class="navbar-logo" href="{% url 'main:dashboard' %}">
+            <span class="logo d-none d-xs-block"></span>
+            <span class="logo-mobile d-block d-xs-none"></span>
+        </a>
+
+        <div class="navbar-right">
+            <div class="header-icons d-inline-block align-middle">
+
+                <div class="position-relative d-inline-block">
+                    <button class="header-icon btn btn-empty" type="button" id="notificationButton" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="simple-icon-bell"></i>
+                        <span class="count">3</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right mt-3 scroll position-absolute" id="notificationDropdown">
+
+                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <a href="#">
+                                <img src="{% static 'img/profile-pic-l-2.jpg' %}" alt="Notification Image" class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
+                            </a>
+                            <div class="pl-3 pr-2">
+                                <a href="#">
+                                    <p class="font-weight-medium mb-1">Joisse Kaycee just sent a new comment!</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <a href="#">
+                                <img src="{% static 'img/notification-thumb.jpg' %}" alt="Notification Image" class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
+                            </a>
+                            <div class="pl-3 pr-2">
+                                <a href="#">
+                                    <p class="font-weight-medium mb-1">1 item is out of stock!</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex flex-row mb-3 pb-3 border-bottom">
+                            <a href="#">
+                                <img src="{% static 'img/notification-thumb-2.jpg' %}" alt="Notification Image" class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
+                            </a>
+                            <div class="pl-3 pr-2">
+                                <a href="#">
+                                    <p class="font-weight-medium mb-1">New order received! It is total $147,20.</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row mb-3 pb-3 ">
+                            <a href="#">
+                                <img src="{% static 'img/notification-thumb-3.jpg' %}" alt="Notification Image" class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
+                            </a>
+                            <div class="pl-3 pr-2">
+                                <a href="#">
+                                    <p class="font-weight-medium mb-1">3 items just added to wish list by a user!</p>
+                                    <p class="text-muted mb-0 text-small">09.04.2018 - 12:45</p>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="header-icon btn btn-empty d-none d-sm-inline-block" type="button" id="fullScreenButton">
+                    <i class="simple-icon-size-fullscreen"></i>
+                    <i class="simple-icon-size-actual"></i>
+                </button>
+
+            </div>
+
+            <div class="user d-inline-block">
+                <button class="btn btn-empty p-0" type="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <span id="userinfo">{{request.session.username}}</span>
+                    <span>
+                        <img alt="Profile Picture" src="{% static 'img/profile-pic-l.jpg' %}" />
+                    </span>
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right mt-3">
+                    <a class="dropdown-item" style="cursor:pointer" onclick="viewProfile()">Profile</a>
+                    <a class="dropdown-item" href="{% url 'accounts:sign_out' %}">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalContentLabel">User Profile</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>First Name&nbsp;:&nbsp;</b></label>
+                                    <span id="proFirstName"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Last Name&nbsp;:&nbsp;</b></label>
+                                    <span id="proLastName"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Bithday&nbsp;:&nbsp;</b></label>
+                                    <span id="proBirthday"></span>
+                                </div>
+                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Gender&nbsp;:&nbsp;</b></label>
+                                    <span id="proGener"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Email&nbsp;:&nbsp;</b></label>
+                                    <span id="proEmail"></span>
+                                </div>
+                
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Phone Number&nbsp;:&nbsp;</b></label>
+                                    <span id="proPhoneNumber"></span>
+                                </div>
+                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>PostCode&nbsp;:&nbsp;</b></label>
+                                    <span id="proPostCode"></span>
+                                </div>
+                
+                            </div>
+
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label"><b>address&nbsp;:&nbsp;</b></label>
+                            <span id="proAddress"></span>
+                        </div>
+                                
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <div class="sidebar">
+            <div class="main-menu">
+                    <div class="scroll">
+                        <ul class="list-unstyled">
+                            <li {% if request.path == '/dashboard'%}class="active" {% endif %}>
+                                <a href="#dashboard">
+                                    <i class="glyph-icon simple-icon-grid"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li {% if request.path == "/appointment/book" or request.path == "/appointment/view" or request.path == "/appointment/history" %}class="active" {% endif %}>
+                                <a href="#appointment">
+                                    <i class="glyph-icon simple-icon-calendar"></i>
+                                    <span>Appointment</span>
+                                </a>
+                            </li>
+                            <li {% if request.path == "/healthinfo/problems" or request.path == "/healthinfo/medications" or request.path == "/healthinfo/tests" %}class = "active" {% endif %}>
+                                <a href="#layouts">
+                                    <i class="glyph-icon simple-icon-heart"></i> Health Info
+                                </a>
+                            </li>
+                        </ul>
+                    </div> 
+                </div>
+            
+                <div class="sub-menu">
+                    <div class="scroll">
+                        <ul class="list-unstyled" data-link="dashboard">
+                            <li {% if request.path == "/dashboard" %}class="active" {% endif %}>
+                                <a href="{% url 'main:dashboard' %}">
+                                    <i class="simple-icon-rocket"></i> Dashboard
+                                </a>
+                            </li>
+                        </ul>
+
+                        <ul class="list-unstyled" data-link="appointment">
+                            <li {% if request.path == "/appointment/book" %}class="active" {% endif %}>
+                                <a href="{% url 'main:book' %}">
+                                    <i class="simple-icon-rocket"></i> Book
+                                </a>
+                            </li>
+                            <li {% if request.path == "/appointment/view" %}class="active" {% endif %}>
+                                <a href="{% url 'main:view' %}">
+                                    <i class="glyph-icon simple-icon-eyeglass"></i>View
+                                </a>
+                            </li>
+                            <li {% if request.path == "/appointment/history" %}class="active" {% endif %}>
+                                <a href="{% url 'main:history' %}">
+                                    <i class="glyph-icon simple-icon-notebook"></i> History
+                                </a>
+                            </li>
+                        </ul>
+            
+                        <ul class="list-unstyled" data-link="layouts">
+                            <li {% if request.path == "/healthinfo/problems" %}class="active" {% endif %}>
+                                <a href="{% url 'main:problems' %}">
+                                    <i class="glyph-icon simple-icon-info"></i> Problems
+                                </a>
+                            </li>
+                            <li {% if request.path == "/healthinfo/medications" %}class="active" {% endif %}>
+                                <a href="{% url 'main:medications' %}">
+                                    <i class="glyph-icon simple-icon-diamond"></i> Medications
+                                </a>
+                            </li>
+                            <li {% if request.path == "/healthinfo/tests" %}class="active" {% endif %}>
+                                <a href="{% url 'main:tests' %}">
+                                    <i class="glyph-icon simple-icon-book-open"></i> Test Results
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+    </div>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script>
+
+        // display user profile
+        function viewProfile(){
+
+            $("#proFirstName").text("");
+            $("#proLastName").text("");
+            $("#proBirthday").text("");
+            $("#proGener").text("");
+            $("#proEmail").text("");
+            $("#proPhoneNumber").text("");
+            $("#proPostCode").text("");
+            $("#proAddress").text("");
+            $("#profileModal").modal();
+
+            
+            $.ajax({
+            async:false,
+            type: "GET",
+            url: "{% url 'main:view_profile' %}",
+            success: function (data) {
+                if(data != ""){
+                    var jsondata = JSON.parse(data);
+
+                    $("#proFirstName").text(jsondata[0].fields.first_name);
+                    $("#proLastName").text(jsondata[0].fields.last_name);
+                    $("#proBirthday").text(jsondata[0].fields.birthday);
+
+                    if(jsondata[0].fields.gender == 'M'){
+                        $("#proGener").text('Male');
+                    }else{
+                        $("#proGener").text('Female');
+                    }
+                    $("#proEmail").text(jsondata[0].fields.useremail);
+                    $("#proPhoneNumber").text(jsondata[0].fields.phone_number);
+                    $("#proPostCode").text(jsondata[0].fields.postcode);
+                    $("#proAddress").text(jsondata[0].fields.address);
+                }else{
+                    $.sweetModal({
+                        content: 'Database error.',
+                        icon: $.sweetModal.ICON_ERROR
+                    });
+
+                }
+            }
+        });
+
+        }
+    </script>
+</body>
+
+</html>

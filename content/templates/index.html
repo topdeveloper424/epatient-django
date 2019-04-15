@@ -1,0 +1,208 @@
+ <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>E-Patient | A Patient Management System</title>
+
+    {% load staticfiles %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'assets-landing/css/bootstrap.min.css' %}" >
+    <!-- Icon -->
+    <link rel="stylesheet" href="{% static 'assets-landing/fonts/line-icons.css' %}">
+    <!-- Owl carousel -->
+    
+    <!-- Animate -->
+    <link rel="stylesheet" href="{% static 'assets-landing/css/animate.css' %}">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="{% static 'assets-landing/css/main.css' %}">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" href="{% static 'assets-landing/css/responsive.css' %}">
+	
+	<link rel="stylesheet" href="https://use.typekit.net/lnl5tqo.css">  
+
+  </head>
+  <body>
+
+    <!-- Header Area wrapper Starts -->
+    <header id="header-wrap">
+      <!-- Navbar Start -->
+      <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <a href="{% static 'main:index' %}" class="navbar-brand"><img src="{% static 'assets-landing/img/logo.png' %}" alt="" width=""></a>       
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="lni-menu"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end clearfix">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">
+                  About
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  Support
+                </a>
+              </li>
+            
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                </a>
+              </li>
+              <span class="header-button"><a href="{% url 'accounts:sign_in' %}" class="btn btn-common">SIGN IN</a></span>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- Navbar End -->
+
+      <!-- Hero Area Start -->
+      <div id="hero-area" class="hero-area-bg">
+        <div class="container">      
+          <div class="row">
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+              <div class="contents">
+                <h2 class="head-title">Book Appointments &amp;<br>
+                  View Health Records<br>
+                All In One Place</h2>
+                <p>Taking care of your health is essential. We've designed a system to allow you to book apointments, view your health records and manage your NHS prescriptions.</p>
+                <div class="header-button"><a href="{% url 'accounts:sign_in' %}" class="btn btn-common">SIGN IN</a> <a href="{% url 'accounts:sign_up' %}" class="btn btn-border video-popup">REGISTER</a></div>
+              </div>
+            </div>
+            <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+              <div class="intro-img"> </div>            
+            </div>
+          </div> 
+        </div> 
+      </div>
+      <!-- Hero Area End -->
+
+    </header>
+    <!-- Header Area wrapper End -->
+
+    <!-- Services Section Start -->    <!-- Services Section End -->
+
+    <!-- About Section start -->
+    <div class="about-area section-padding bg-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 col-xs-12 info">
+            <div class="about-wrapper wow fadeInLeft" data-wow-delay="0.3s">
+              <div>
+                <div class="site-heading">
+<h2 class="section-title">Secure access from wherever you are.</h2>
+                </div>
+                <div class="content">
+                  <p>Our aim is to ensure you data is kept secure and accessible. This is why we've built our system using the highest standards of security and focused our efforts on creating a user interface which is simple to use.</p>
+                  <a href="#" class="btn btn-common mt-3">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12 col-xs-12 wow fadeInRight" data-wow-delay="0.3s">
+            <img class="img-fluid" src="{% static 'assets-landing/img/about/img-1.png' %}" alt="" >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- About Section End -->
+
+    <!-- Features Section Start -->    <!-- Features Section End -->   
+
+    <!-- Team Section Start -->    <!-- Team Section End -->
+
+    <!-- Pricing section Start -->    <!-- Pricing Table Section End -->
+  
+    <!-- Testimonial Section Start -->
+    <!-- Testimonial Section End -->
+
+    <!-- Call To Action Section Start -->    <!-- Call To Action Section Start -->
+
+    <!-- Contact Section Start -->    <!-- Contact Section End -->
+
+    <!-- Footer Section Start -->
+    <footer id="footer" class="footer-area section-padding">
+      <div class="container">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-6 col-mb-12">
+              <div class="widget">
+                <h3 class="footer-logo col-lg-12"><img src="{% static 'assets-landing/img/logo.png' %}" alt="" class="img-fluid"></h3>
+                <div class="textwidget">
+                  <p>A Secure Patient Management System. This is a Final Year Project created by Ameen Zinga.</p>
+                </div>
+</div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+              <h3 class="footer-titel">Login</h3>
+              <ul class="footer-link">
+                <li><a href="{% url 'accounts:sign_in' %}">Patient Login</a></li>
+                <li><a href="{% url 'accounts:sign_in' %}">Medical Login</a></li>
+                <li><a href="{% url 'accounts:sign_in' %}">Admin Login</a></li>          
+              </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+              <h3 class="footer-titel">Information</h3>
+              <ul class="footer-link">
+                <li><a href="#">Terms of Use</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">GDPR</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+              <h3 class="footer-titel">Contact</h3>
+              <ul class="address">
+                
+                <li>
+                  <a href="#"><i class="lni-envelope"></i> E: info@e-patient.co</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>  
+      </div> 
+      <div id="copyright">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="copyright-content">
+                <p>Copyright © 2019 E-Patient All Rights Reserved. Created by Ameen Zinga as for a University of Westminster Final Year Project.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>   
+    </footer> 
+    <!-- Footer Section End -->
+
+    <!-- Go to Top Link -->
+    <a href="#" class="back-to-top">
+    	<i class="lni-arrow-up"></i>
+    </a>
+    
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader" id="loader-1"></div>
+    </div>
+    <!-- End Preloader -->
+    
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'assets-landing/js/jquery-min.js' %}"></script>
+    <script src="{% static 'assets-landing/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets-landing/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets-landing/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets-landing/js/wow.js' %}"></script>
+    <script src="{% static 'assets-landing/js/jquery.nav.js' %}"></script>
+    <script src="{% static 'assets-landing/js/scrolling-nav.js' %}"></script>
+    <script src="{% static 'assets-landing/js/jquery.easing.min.js' %}"></script>  
+    <script src="{% static 'assets-landing/js/main.js' %}"></script>
+    <script src="{% static 'assets-landing/js/form-validator.min.js' %}"></script>
+    <script src="{% static 'assets-landing/js/contact-form-script.min.js' %}"></script>
+      
+  </body>
+</html>

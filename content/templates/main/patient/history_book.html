@@ -1,0 +1,253 @@
+{% extends 'layouts/patient/main.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>History Appointments</h1>
+            <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                <ol class="breadcrumb pt-0">
+                    <li class="breadcrumb-item">
+                        <a href="#">Appointment</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">History</a>
+                    </li>
+                </ol>
+            </nav>
+            <div class="separator mb-5"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-xl-2 mb-4">
+            <span>Select Date</span>
+        </div>
+        <div class="col-12 col-xl-2 mb-4">
+            <select class="form-control" id="selYear">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+            </select>
+
+        </div>
+
+        <div class="col-12 col-xl-2 mb-4">
+            <select class="form-control" id="selMonth">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+
+        </div>
+        <div class="col-12 col-xl-6 mb-4">
+            <span></span>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12 col-xl-12 mb-4">
+
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4>Appointments</h4>
+                    <div class="separator"></div>
+                    <div id="appoint_container"></div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalContentLabel">Appointment Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Doctor Name:</b></label>
+                        <span id="doctorName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Created Date:</b></label>
+                        <span id="createdDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Book Text</b></label>
+                        <textarea class="form-control" id="book-text" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var cur_date = new Date();
+        var year = cur_date.getFullYear();
+        var month = cur_date.getMonth() + 1;
+        $("#selYear").val(year);
+        $("#selMonth").val(month);
+
+        $("#selYear").on('change', function () {
+            var cur_month = $("#selMonth").val();
+
+            $.ajax({
+                type: "GET",
+                url: "{% url 'main:appoint_history' %}",
+                data: { year: this.value, month: cur_month },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data != "") {
+
+                        var html = "";
+                        var jsondata = JSON.parse(data)
+                        for (var i = 0; i < jsondata.length; i++) {
+                            var modeldata = jsondata[i];
+                            var status = modeldata.fields.status;
+                            var st_str = "";
+                            if (status == "A") {
+                                st_str = "Accepted";
+                            } else if (status == "P") {
+                                st_str = "Pending";
+                            } else if (status == "R") {
+                                st_str = "Rejected";
+                            }
+                            html += "                    <div class=\"mb-4\">\n" +
+                                "                        <br>\n" +
+                                "                        <a onclick=\"viewAppoint(" + modeldata.pk + ")\" style=\"cursor:pointer\">\n" +
+                                "                            <p class=\"list-item-heading mb-1 color-theme-1\">" + modeldata.fields.book_date + " </p>\n" +
+                                "                            <p class=\"mb-1 text-muted text-small\">" + st_str + "</p>\n" +
+                                "                            <p class=\"mb-4 text-small\">" + modeldata.fields.from_time + " - " + modeldata.fields.to_time + "</p>\n" +
+                                "                        </a>\n" +
+                                "                        <div class=\"separator\"></div>\n" +
+                                "                    </div>\n"
+
+                        }
+
+                        $("#appoint_container").html(html);
+
+
+                    } else {
+                        $("#appoint_container").html("");
+
+                    }
+                }
+            });
+
+
+        });
+
+        // display appointments for selected month
+        $("#selMonth").on('change', function () {
+            var cur_month = this.value;
+
+            var cur_year = $("#selYear").val();
+
+            $.ajax({
+                type: "GET",
+                url: "{% url 'main:appoint_history' %}",
+                data: { year: cur_year, month: cur_month },
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    if (data != "") {
+
+                        var html = "";
+                        var jsondata = JSON.parse(data)
+                        for (var i = 0; i < jsondata.length; i++) {
+                            var modeldata = jsondata[i];
+                            var status = modeldata.fields.status;
+                            var st_str = "";
+                            if (status == "A") {
+                                st_str = "Accepted";
+                            } else if (status == "P") {
+                                st_str = "Pending";
+                            } else if (status == "R") {
+                                st_str = "Rejected";
+                            }
+                            html += "                    <div class=\"mb-4\">\n" +
+                                "                        <br>\n" +
+                                "                        <a onclick=\"viewAppoint(" + modeldata.pk + ")\" style=\"cursor:pointer\">\n" +
+                                "                            <p class=\"list-item-heading mb-1 color-theme-1\">" + modeldata.fields.book_date + " </p>\n" +
+                                "                            <p class=\"mb-1 text-muted text-small\">" + st_str + "</p>\n" +
+                                "                            <p class=\"mb-4 text-small\">" + modeldata.fields.from_time + " - " + modeldata.fields.to_time + "</p>\n" +
+                                "                        </a>\n" +
+                                "                        <div class=\"separator\"></div>\n" +
+                                "                    </div>\n"
+
+                        }
+
+                        $("#appoint_container").html(html);
+
+                    } else {
+                        $("#appoint_container").html("");
+
+                    }
+
+                }
+            });
+
+        });
+        $("#selMonth").trigger('change');
+
+
+    });
+    function viewAppoint(pk) {
+        $("#doctorName").text("");
+        $("#createdDate").text("");
+        $("#book-text").val("");
+        $("#bookModal").modal();
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:appoint_detail' %}",
+            data: { pk: pk },
+            dataType: 'json',
+            success: function (data) {
+                if (data.doctor != "error") {
+                    $("#doctorName").text(data.doctor);
+                    $("#createdDate").text(data.pub_date);
+                    $("#book-text").val(data.text);
+
+                } else {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR
+                    });
+
+                }
+            }
+        });
+    }
+
+
+</script>
+{% endblock %}

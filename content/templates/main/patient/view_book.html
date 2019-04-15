@@ -1,0 +1,330 @@
+{% extends 'layouts/patient/main.html' %} 
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+            <div class="col-12">
+
+                <h1>View Appointments</h1>
+                <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                    <ol class="breadcrumb pt-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">Appointment</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">View</a>
+                        </li>
+                    </ol>
+                </nav>
+                <div class="separator mb-5"></div>
+            </div>
+        <div class="col-12 col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="overflow-y: auto; overflow-y:scroll; max-height: 300px">
+                    <h4>Accepted Appointments</h4>
+                    <div class="separator"></div>
+                    {% for model in accepted %}
+                    <div class="mb-4">
+                        <br>
+                        <a onclick="viewAppoint({{model.pk}})" style="cursor:pointer">
+                            <p class="list-item-heading mb-1 color-theme-1">{{model.book_date}} </p>
+                            <p class="mb-1 text-muted text-small">accepted</p>
+                            <p class="mb-4 text-small">{{model.from_time}} - {{model.to_time}}</p>
+                        </a>
+                        <div class="separator"></div>
+                    </div>
+
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="overflow-y: auto; overflow-y:scroll; max-height: 300px">
+                    <h4>Pending Appointments</h4>
+                    <div class="separator"></div>
+                    {% for model in pending %}
+                    <div class="mb-4">
+                        <br>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <a onclick="viewPAppoint({{model.pk}})" style="cursor:pointer">
+                                    <p class="list-item-heading mb-1 color-theme-1">{{model.book_date}} </p>
+                                    <p class="mb-4 text-small">{{model.from_time}} - {{model.to_time}}</p>
+                                </a>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-danger btn-xs mb-1" onclick="cancelBook({{model.pk}})">cancel</button>
+                            </div>
+                        </div>
+    
+                        <div class="separator"></div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-12 col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body" style="overflow-y: auto; overflow-y:scroll; max-height: 300px">
+                        <h4>Rejected Appointments</h4>
+                        <div class="separator"></div>
+                        {% for model in rejected %}
+                        <div class="mb-4">
+                            <br>
+                            <a onclick="viewAppoint({{model.pk}})" style="cursor:pointer">
+                                <p class="list-item-heading mb-1 color-theme-1">{{model.book_date}} </p>
+                                <p class="mb-1 text-muted text-small">accepted</p>
+                                <p class="mb-4 text-small">{{model.from_time}} - {{model.to_time}}</p>
+                            </a>
+                            <div class="separator"></div>
+                        </div>
+    
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+    
+
+            <div class="col-12 col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body" style="overflow-y: auto; overflow-y:scroll; max-height: 300px">
+                        <h4>Expired Appointments</h4>
+                        <div class="separator"></div>   
+                        {% for model in expired %}
+                        <div class="mb-4">
+                            <br>
+                            <a onclick="viewAppoint({{model.pk}})" style="cursor:pointer">
+                                <p class="list-item-heading mb-1 color-theme-1">{{model.book_date}} </p>
+                                <p class="mb-1 text-muted text-small">accepted</p>
+                                <p class="mb-4 text-small">{{model.from_time}} - {{model.to_time}}</p>
+                            </a>
+                            <div class="separator"></div>
+                        </div>
+    
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+    
+
+        <!-- booking modal -->
+
+        <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalContentLabel">Appointment Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Doctor Name:</b></label>
+                                <span id="doctorName"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Created Date:</b></label>
+                                <span id="createdDate"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Book Text</b></label>
+                                <textarea class="form-control" id="book-text" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- modal end -->
+
+
+        <!-- booking modal -->
+
+        <div class="modal fade" id="pendingModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalContentLabel">Appointment Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="curPK">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Doctor Name:</b></label>
+                                <span id="pdoctorName"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Created Date:</b></label>
+                                <span id="pcreatedDate"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Book Text</b></label>
+                                <textarea class="form-control" id="pbook-text"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="changeAppoint()">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- modal end -->
+
+
+
+
+    </div>
+</div>
+
+<script>
+
+    // display details for selected appointment
+    function viewAppoint(pk){
+        $("#doctorName").text("");
+        $("#createdDate").text("");
+        $("#book-text").val("");
+        $("#bookModal").modal();
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:appoint_detail' %}",
+            data: {pk:pk},
+            dataType: 'json',
+            success: function (data) {
+                if(data.doctor != "error"){
+                    $("#doctorName").text(data.doctor);
+                    $("#createdDate").text(data.pub_date);
+                    $("#book-text").val(data.text);
+
+                }else{
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+
+    // display details for selected appointment
+    function viewPAppoint(pk){
+        $("#pdoctorName").text("");
+        $("#pcreatedDate").text("");
+        $("#pbook-text").val("");
+        $("#pendingModal").modal();
+        $("#curPK").val(pk);
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:appoint_detail' %}",
+            data: {pk:pk},
+            dataType: 'json',
+            success: function (data) {
+                if(data.doctor != "error"){
+                    $("#pdoctorName").text(data.doctor);
+                    $("#pcreatedDate").text(data.pub_date);
+                    $("#pbook-text").val(data.text);
+
+                }else{
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+
+
+    // change appointment text 
+    function changeAppoint(){
+        var pk = $("#curPK").val();
+        var text = $("#pbook-text").val();
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:change_appoint' %}",
+            data: {pk:pk,book_text:text},
+            dataType: 'json',
+            success: function (data) {
+                if(data.doctor == "error"){
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+                }
+            }
+        });
+
+        $("#pendingModal").modal('toggle');
+
+    }
+
+
+// cancel pending appointment.
+    function cancelBook(pk){
+        $.sweetModal.confirm('Confirm please?', function() {
+            $.ajax({
+            async:false,
+            type: "GET",
+            url: "{% url 'main:cancel_appoint' %}",
+            data: {pk:pk},
+            dataType: 'json',
+            success: function (data) {
+                if(data.doctor == "error"){
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+                }
+            }
+        });
+        location.reload();
+
+        });
+
+
+    }
+
+
+</script>
+{% endblock %}

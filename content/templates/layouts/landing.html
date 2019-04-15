@@ -1,0 +1,92 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Dore jQuery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'font/iconsmind/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'font/simple-line-icons/css/simple-line-icons.css' %}" />
+
+  <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-stars.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/owl.carousel.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/bootstrap-stars.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/vendor/video-js.css' %}" />
+  {% block css_content %}
+  {% endblock %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+  <script src="{% static 'js/vendor/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/vendor/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/vendor/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/vendor/jquery.barrating.min.js' %}"></script>
+  <script src="{% static 'js/vendor/jquery.barrating.min.js' %}"></script>
+  <script src="{% static 'js/vendor/landing-page/headroom.min.js' %}"></script>
+  <script src="{% static 'js/vendor/landing-page/jQuery.headroom.js' %}"></script>
+  <script src="{% static 'js/vendor/landing-page/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'js/vendor/landing-page/jquery.autoellipsis.js' %}"></script>
+  <script src="{% static 'js/dore.scripts.landingpage.js' %}"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+
+</head>
+
+<body class="show-spinner">
+  <div class="landing-page">
+    <div class="mobile-menu">
+      <a onclick="goHome()" class="logo-mobile scrollTo">
+          <span></span>
+      </a>
+      <ul class="navbar-nav">
+        <li class="nav-item"><a href="#features" class="scrollTo">FEATURES</a></li>
+        <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
+        <li class="nav-item"><a href="#pricing" class="scrollTo">PRICING</a></li>
+        <li class="nav-item mb-2"><a href="#blog" class="scrollTo">BLOG</a></li>
+        <li class="nav-item">
+          <div class="separator"></div>
+        </li>
+        <li class="nav-item mt-2"><a href="{% url 'accounts:sign_in' %}/sign-in">SIGN IN</a></li>
+        <li class="nav-item"><a href="{% url 'accounts:sign_up' %}">SIGN UP</a></li>
+      </ul>
+    </div>
+
+    <div class="main-container">
+      <nav class="landing-page-nav">
+        <div class="container d-flex align-items-center justify-content-between">
+          <a class="navbar-logo pull-left scrollTo" onclick="goHome()">
+              <span class="white"></span>
+              <span class="dark"></span>
+          </a>
+          <ul class="navbar-nav d-none d-lg-flex flex-row">
+            <li class="nav-item"><a href="#features" class="scrollTo">FEATURES</a></li>
+            <li class="nav-item"><a href="#reviews" class="scrollTo">REVIEWS</a></li>
+            <li class="nav-item"><a href="#pricing" class="scrollTo">PRICING</a></li>
+            <li class="nav-item"><a href="#blog" class="scrollTo">BLOG</a></li>
+            <li class="nav-item mr-3"><a href="{% url 'accounts:sign_in' %}">SIGN IN</a></li>
+            <li class="nav-item pl-2">
+              <a class="btn btn-outline-semi-light btn-sm pr-4 pl-4" href="{% url 'accounts:sign_up' %}">SIGN UP</a>
+            </li>
+          </ul>
+          <a href="/" class="mobile-menu-button">
+            <i class="simple-icon-menu"></i>
+          </a>
+        </div>
+      </nav>
+
+      <div class="content-container" id="home">
+        {% block content %}
+        {% endblock %}
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function goHome(){
+      window.location.href = "/";
+    }
+  </script>
+</body>
+
+</html>

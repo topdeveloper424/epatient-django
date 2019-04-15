@@ -1,0 +1,127 @@
+{% extends 'layouts/auth.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<div class="row h-100">
+        <div class="col-12 col-md-10 mx-auto my-auto">
+            <div class="card auth-card">
+                <div class="position-relative image-side ">
+                    <p class=" text-white h2">TAKE CARE YOUR HEALTH</p>
+                    <p class="white mb-0">
+                        Please use this form to register.
+                        <br>If you are a member, please
+                        <a href="{% url 'accounts:sign_in' %}" style="text-decoration: underline;"  class="white">login</a>.
+                    </p>
+                </div>
+                <div class="form-side">
+                    <a href="{% url 'main:index' %}">
+                        <span class="logo-single"></span>
+                    </a>
+                    <h6 class="mb-4">Register</h6>
+                    {% if form.non_field_errors %}<div class="alert alert-danger rounded" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+                    {% if form.errors %}<div class="alert alert-danger rounded" role="alert">{{ form.errors }}</div>{% endif %}
+                    {% if confirm_error %}<div class="alert alert-danger rounded" role="alert">{{ confirm_error }}</div>{% endif %}
+
+                    <form action="{% url 'accounts:sign_up' %}" method ="POST">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-2" for="{{form.first_name.id_for_label}}">
+                                    {{form.first_name}}
+                                    <span>Given Name</span>
+                                </label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-2" for="{{form.last_name.id_for_label}}">
+                                        {{form.last_name}}
+                                        <span>Family Name</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.useremail.id_for_label}}">
+                                        {{form.useremail}}
+                                    <span>E-mail</span>
+                                </label>
+            
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.user_type.id_for_label}}">
+                                        {{form.phone_number}}
+                                    <span>Phone Number</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.password.id_for_label}}">
+                                        {{form.password}}
+                                    <span>Password</span>
+                                </label>
+            
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="confrm_password">
+                                    <input class="form-control" name="confrm_password" id="confrm_password" type="password" placeholder="Please retype your password" required />
+                                    <span>confirm Password</span>
+                                </label>
+                
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.birthday.id_for_label}}">
+                                    <div class="input-group date">
+                                        {{form.birthday}}
+                                        <span class="input-group-text input-group-append input-group-addon">
+        
+                                            <i class="simple-icon-calendar"></i>
+                                        </span>
+                                    </div>
+                                    <span>Birthday</span>
+                                </label>
+                
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.gender.id_for_label}}">
+                                        {{form.gender}}
+                                    <span>Gender</span>
+                                </label>
+            
+                            </div>
+    
+                        </div>
+
+                        <div class="form-row">
+                                        {{form.user_type}}
+                            <div class="form-group col-md-6">
+                                <label class="form-group has-float-label mb-4" for="{{form.postcode.id_for_label}}">
+                                        {{form.postcode}}
+                                    <span>PostCode</span>
+                                </label>
+            
+                            </div>
+                        </div>
+
+                        <label class="form-group has-float-label mb-4" for="{{form.address.id_for_label}}">
+                                {{form.address}}
+                            <span>Address</span>
+                        </label>
+                        <label class="form-group has-float-label mb-4" for="{{form.address.id_for_label}}">
+                                {{form.practice}}
+                            <span>Your Practice</span>
+                        </label>
+
+
+
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button class="btn btn-primary btn-lg btn-shadow" type="submit">REGISTER</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'layouts/medical/main.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Appointments</h1>
+            <div class="separator mb-5"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-xl-12 mb-4">
+
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4>Requested Appointments</h4>
+                    <div class="separator"></div>
+                    {% if appointments %}
+                    {% for model in appointments %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-4">
+                                <br>
+                                <a onclick="viewAppoint({{model.pk}})" style="cursor:pointer">
+                                    <p class="list-item-heading mb-1 color-theme-1">{{model.book_date}} </p>
+                                    {% if model.status == 'A' %}
+                                    <p class="mb-1 text-muted text-small">Accepted</p>
+                                    {% elif model.status == 'R' %}
+                                    <p class="mb-1 text-muted text-small">Rejected</p>
+                                    {% else %}
+                                    <p class="mb-1 text-muted text-small">Pending</p>
+                                    {% endif %}
+
+                                    <p class="mb-4 text-small">{{model.from_time}} - {{model.to_time}}</p>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="margin-top:35px;">
+                            <button type="button" class="btn btn-danger btn-sm mb-1" onclick="accept({{model.pk}})" 
+                            {% if model.status == 'A' %} disabled{% endif %}>Accept</button>
+                        </div>
+                        <div class="col-md-2" style="margin-top:35px">
+                            <button type="button" class="btn btn-primary btn-sm mb-1" onclick="reject({{model.pk}})" 
+                            {% if model.status == 'R' %} disabled{% endif %}>Reject</button>
+                        </div>
+
+                    </div>
+                    <div class="separator"></div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalContentLabel">Problem Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="curPatient">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Patient Name:</b></label>
+                        <span id="patientName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Updated Date:</b></label>
+                        <span id="createdDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Book Text</b></label>
+                        <textarea class="form-control" id="decription-text" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="gotoPatientPage()">Go to Patient Info Page</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    localStorage.tab = 1;
+
+    function viewAppoint(pk) {
+        $("#patientName").text("");
+        $("#createdDate").text("");
+        $("#decription-text").val("");
+        $("#curPatient").val(pk);
+        $("#appointModal").modal();
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:appoint_detailform' %}",
+            data: { pk: pk },
+            dataType: 'json',
+            success: function (data) {
+                //                console.log(data);
+                if (data.patient != "error") {
+                    $("#patientName").text(data.patient);
+                    $("#createdDate").text(data.pub_date);
+                    $("#decription-text").val(data.text);
+
+                } else {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+
+    function gotoPatientPage() {
+        var curPK = $("#curPatient").val();
+        window.open("{% url 'main:patient_info' %}?pk=" + curPK);
+    }
+    function accept(pk) {
+        $.sweetModal.confirm('Confirm please?', function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'main:appoint_action' %}",
+                data: { pk: pk, method: 'A' },
+                dataType: 'json',
+                success: function (data) {
+                    //                console.log(data);
+                    if (data.patient != "error") {
+                        window.location.reload();
+
+                    } else {
+                        $.sweetModal({
+                            content: 'error happened!.',
+                            icon: $.sweetModal.ICON_ERROR,
+                            buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                        });
+
+                    }
+                }
+            });
+
+        });
+
+    }
+
+    function reject(pk) {
+
+        $.sweetModal.confirm('Confirm please?', function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'main:appoint_action' %}",
+                data: { pk: pk, method: 'R' },
+                dataType: 'json',
+                success: function (data) {
+                    //                console.log(data);
+                    if (data.patient != "error") {
+                        window.location.reload();
+
+                    } else {
+                        $.sweetModal({
+                            content: 'error happened!.',
+                            icon: $.sweetModal.ICON_ERROR,
+                            buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                        });
+
+                    }
+                }
+            });
+        });
+
+
+    }
+
+
+</script>
+
+
+{% endblock %}

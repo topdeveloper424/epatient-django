@@ -1,0 +1,754 @@
+{% extends 'layouts/admin/main.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Patient Info</h1>
+            <div class="separator mb-5"></div>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header pl-0 pr-0">
+                <ul class="nav nav-tabs card-header-tabs  ml-0 mr-0" role="tablist">
+                    <li class="nav-item w-25 text-center">
+                        <a class="nav-link active" id="first-tab_" data-toggle="tab" href="#firstFull"
+                            role="tab" aria-controls="first" aria-selected="true" onclick="selectTab(1)">Patient Details</a>
+                    </li>
+                    <li class="nav-item w-25 text-center">
+                        <a class="nav-link" id="second-tab_" data-toggle="tab" href="#secondFull"
+                            role="tab" aria-controls="second" aria-selected="false" onclick="selectTab(2)">Problems</a>
+                    </li>
+                    <li class="nav-item w-25 text-center">
+                        <a class="nav-link" id="third-tab_" data-toggle="tab" href="#thirdFull"
+                            role="tab" aria-controls="third" aria-selected="false" onclick="selectTab(3)">Medications</a>
+                    </li>
+                    <li class="nav-item w-25 text-center">
+                            <a class="nav-link" id="forth-tab_" data-toggle="tab" href="#forthFull"
+                            role="tab" aria-controls="forth" aria-selected="false" onclick="selectTab(4)">Test Results</a>
+                    </li>
+    
+                    
+                </ul>
+            </div>
+            <input type="hidden" id="patient_id" value="">
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="firstFull" role="tabpanel"
+                        aria-labelledby="first-tab_">
+                        <br>
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><b>Patient Name &nbsp;&nbsp;:</b> &nbsp;&nbsp; {{patient_data.first_name}} {{patient_data.last_name}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><b>Brithday &nbsp;&nbsp;:</b> &nbsp;&nbsp; {{patient_data.birthday}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h5><b>Gender &nbsp;&nbsp;:</b> &nbsp;&nbsp; {% if patient_data.gender == 'M' %} Male {% else %} Female {% endif %}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                    <br>
+                                <h5><b>Email &nbsp;&nbsp;:</b>&nbsp;&nbsp; {{patient_data.useremail}}</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <br>
+                                <h5><b>Phone Number &nbsp;&nbsp;:</b>&nbsp;&nbsp; {{patient_data.phone_number}}</h5>
+                            </div>
+                            <div class="col-md-6">
+                                    <br>
+                                <h5><b>Address &nbsp;&nbsp;:</b>&nbsp;&nbsp; {{patient_data.address}}</h5>
+                            </div>
+                            
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="secondFull" role="tabpanel" aria-labelledby="second-tab_">
+
+                        <div class="col-md-2">
+                            <br>
+                            <button type="button" class="btn btn-success btn-sm mb-1" onclick="addProblem()">Add New</button>
+                            <br>
+                            <br>
+                        </div>
+                        <div class="row">
+                            {% if problems %}
+                                {% for model in problems %}
+                                    <div class="col-md-10">
+                                        <div class="mb-4">
+                                            <br>
+                                                <p class="list-item-heading mb-1 color-theme-1">{{model.pub_date}} </p>
+                                                <p class="mb-4 text-small">{{model.description}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" style="margin-top:25px;">
+                                        <button type="button" class="btn btn-danger btn-sm mb-1" onclick="editProblem({{model.pk}})">Edit</button>
+                                    </div>
+                                    
+                                    <div class="col-md-12 separator"></div>
+                                {% endfor %}
+                            {% endif %}
+            
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="thirdFull" role="tabpanel" aria-labelledby="third-tab_">
+
+                            <div class="col-md-2">
+                                    <br>
+                                    <button type="button" class="btn btn-success btn-sm mb-1" onclick="addMedication()">Add New</button>
+                                    <br>
+                                    <br>
+                                </div>
+                                <div class="row">
+                                    {% if medications %}
+                                        {% for model in medications %}
+                                            <div class="col-md-10">
+                                                <div class="mb-4">
+                                                    <br>
+                                                        <p class="list-item-heading mb-1 color-theme-1">{{model.pub_date}} </p>
+                                                        <p class="mb-4 text-small">{{model.description}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="margin-top:25px;">
+                                                <button type="button" class="btn btn-danger btn-sm mb-1" onclick="editMedication({{model.pk}})">Edit</button>
+                                            </div>
+                                            
+                                            <div class="col-md-12 separator"></div>
+                                        {% endfor %}
+                                    {% endif %}
+                    
+                                </div>
+        
+                    </div>
+    
+                    <div class="tab-pane fade" id="forthFull" role="tabpanel" aria-labelledby="forth-tab_">
+
+                            <div class="col-md-2">
+                                    <br>
+                                    <button type="button" class="btn btn-success btn-sm mb-1" onclick="addTest()">Add New</button>
+                                    <br>
+                                    <br>
+                                </div>
+                                <div class="row">
+                                    {% if tests %}
+                                        {% for model in tests %}
+                                            <div class="col-md-10">
+                                                <div class="mb-4">
+                                                    <br>
+                                                        <p class="list-item-heading mb-1 color-theme-1">{{model.pub_date}} </p>
+                                                        <p class="mb-4 text-small">{{model.name}}</p>
+                                                        <p class="mb-4 text-small">{{model.result}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" style="margin-top:25px;">
+                                                <button type="button" class="btn btn-danger btn-sm mb-1" onclick="editTest({{model.pk}})">Edit</button>
+                                            </div>
+                                            
+                                            <div class="col-md-12 separator"></div>
+                                        {% endfor %}
+                                    {% endif %}
+                    
+                                </div>
+
+                        
+
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+    <div class="modal fade" id="problemModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalContentLabel">Problem Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="curProblemPK">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label"><b>Doctor Name:</b></label>
+                            <span id="doctorName"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label"><b>Updated Date:</b></label>
+                            <span id="createdDate"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label"><b>Description</b></label>
+                            <textarea class="form-control" id="decription-text"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="saveProblem()">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="modal fade" id="addProblemModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalContentLabel">Problem Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label"><b>Description</b></label>
+                            <textarea class="form-control" id="add-problem-decription"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="createProblem()">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade" id="medicationModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalContentLabel">Medication Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="medicalPK">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Doctor Name:</b></label>
+                                <span id="med_doctorName"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Updated Date:</b></label>
+                                <span id="med_createdDate"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>acute/repeat:</b></label>
+                                <select class="form-control" id="med_status">
+                                    <option value="A">Acute</option>
+                                    <option value="R">Repeat</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label"><b>Description</b></label>
+                                <textarea class="form-control" id="med-decription-text"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="saveMedication()">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="addMedicationModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">Medication Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>acute/repeat:</b></label>
+                                    <select class="form-control" id="add_med_status">
+                                        <option value="A">Acute</option>
+                                        <option value="R">Repeat</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Description</b></label>
+                                    <textarea class="form-control" id="add-med-decription"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="createMedication()">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">Test Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="testPK">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Test Name:</b></label>
+                                    <input class="form-control" id="testName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Description</b></label>
+                                    <textarea class="form-control" id="test-decription"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Result:</b></label>
+                                    <input class="form-control" id="result">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="saveTest()">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+    
+                <div class="modal fade" id="addTestModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalContentLabel">Test Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Test Name:</b></label>
+                                    <input class="form-control" id="addTestName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Description</b></label>
+                                    <textarea class="form-control" id="add-test-decription"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label"><b>Result:</b></label>
+                                    <input class="form-control" id="addResult">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" onclick="createTest()">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+</div>
+
+<script>
+
+    function editProblem(pk){
+        $("#doctorName").text("");
+        $("#createdDate").text("");
+        $("#decription-text").val("");
+        $("#problemModal").modal();
+        $("#curProblemPK").val(pk);
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:problems_detail' %}",
+            data: { pk: pk },
+            dataType: 'json',
+            success: function (data) {
+//                console.log(data);
+                if (data.doctor != "error") {
+                    $("#doctorName").text(data.doctor);
+                    $("#createdDate").text(data.pub_date);
+                    $("#decription-text").val(data.description);
+
+                } else {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+
+    }
+
+    function saveProblem(){
+        var pk = $("#curProblemPK").val();
+
+        var text = $("#decription-text").val();
+        if(text.trim() == ""){
+            alert("Please type description!");
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:save_problem' %}",
+            data: { pk:pk ,text:text},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    function addProblem(){
+
+        $("#add-problem-decription").val("");
+
+        $("#addProblemModal").modal();
+    }
+
+    function createProblem(){
+        var result = window.location.search.substr(1);
+        var param = result.split("=");
+        var pk = param[1];
+
+        var description = $("#add-problem-decription").val();
+        if(description.trim() == ""){
+            alert("Please type description!");
+            return;
+        }
+
+        var mode = 0;
+        if(window.location.pathname == "/patient-info-user"){
+            mode = 1;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:create_problem' %}",
+            data: { mode:mode, pk:pk ,text:description},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    function editMedication(pk) {
+        $("#med_doctorName").text("");
+        $("#med_createdDate").text("");
+        $("#med-decription-text").val("");
+        $("#med_status").val("");
+        $("#medicalPK").val(pk);
+        $("#medicationModal").modal();
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:medications_detail' %}",
+            data: { pk: pk },
+            dataType: 'json',
+            success: function (data) {
+//                console.log(data);
+                if (data.doctor != "error") {
+                    $("#med_doctorName").text(data.doctor);
+                    $("#med_createdDate").text(data.pub_date);
+                    $("#med_status").val(data.status);
+                    $("#med-decription-text").val(data.description);
+
+                } else {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+
+    function saveMedication(){
+        var pk = $("#medicalPK").val();
+        var text = $("#med-decription-text").val();
+        var status = $("#med_status").val();
+
+        if(text.trim() == ""){
+            alert("Please type description!");
+            return;
+        }
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:save_medication' %}",
+            data: { pk:pk ,text:text,status:status},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+
+    function addMedication(){
+
+        $("#add-med-decription").val("");
+
+        $("#addMedicationModal").modal();
+    }
+
+    function createMedication(){
+        var result = window.location.search.substr(1);
+        var param = result.split("=");
+        var pk = param[1];
+
+        var description = $("#add-med-decription").val();
+        var status = $("#add_med_status").val();
+
+        if(description.trim() == ""){
+            alert("Please type description!");
+            return;
+        }
+        var mode = 0;
+        if(window.location.pathname == "/patient-info-user"){
+            mode = 1;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:create_medication' %}",
+            data: { mode:mode, pk:pk ,text:description,status:status},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    function editTest(pk) {
+        $("#testName").val("");
+        $("#test-decription").val("");
+        $("#result").val("");
+        $("#testPK").val(pk);
+        $("#testModal").modal();
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:tests_detail' %}",
+            data: { pk: pk },
+            dataType: 'json',
+            success: function (data) {
+//                console.log(data);
+                if (data.doctor != "error") {
+                    $("#testName").val(data.name);
+                    $("#test-decription").val(data.description);
+                    $("#result").val(data.result);
+
+                } else {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+    }
+
+    function saveTest(){
+        var pk = $("#testPK").val();
+        var name = $("#testName").val();                                                                                                                                                                                                                                                                                                                       
+        var text = $("#test-decription").val();
+        var result = $("#result").val();
+        if(name.trim() == "" || text.trim() == "" || result.trim() == ""){
+            alert("Please type all inputs!");
+            return;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:save_test' %}",
+            data: { pk:pk ,name:name, text:text,result:result},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    function addTest(){
+
+        $("#addTestName").val("");
+        $("#addResult").val("");
+        $("#add-test-decription").val("");
+
+        $("#addTestModal").modal();
+    }
+
+    function createTest(){
+        var result = window.location.search.substr(1);
+        var param = result.split("=");
+        var pk = param[1];
+
+        var name = $("#addTestName").val();
+        var result = $("#addResult").val();
+        var text = $("#add-test-decription").val();
+
+        if(name.trim() == "" || text.trim() == "" || result.trim() == ""){
+            alert("Please type all inputs!");
+            return;
+        }
+        var mode = 0;
+        if(window.location.pathname == "/patient-info-user"){
+            mode = 1;
+        }
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:create_test' %}",
+            data: { mode:mode, pk:pk ,text:text,name:name,result:result},
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if (data.status == "error") {
+                    $.sweetModal({
+                        content: 'error happened!.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+                window.location.reload();
+            }
+        });
+    }
+
+    function selectTab(index){
+        localStorage.tab = index;
+    }
+
+    $(document).ready(function(){
+        if(localStorage.tab){
+            if(localStorage.tab == 1){
+                $("#first-tab_").click();
+            }else if(localStorage.tab == 2){
+                $("#second-tab_").click();
+            }else if(localStorage.tab == 3){
+                $("#third-tab_").click();
+            }else if(localStorage.tab == 4){
+                $("#forth-tab_").click();
+            }else{
+                $("#first-tab_").click();
+            }
+        }
+    });
+</script>
+
+
+{% endblock %}

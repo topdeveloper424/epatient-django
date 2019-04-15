@@ -1,0 +1,43 @@
+{% extends 'layouts/auth.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="row h-100">
+        <div class="col-12 col-md-10 mx-auto my-auto">
+            <div class="card auth-card">
+                <div class="position-relative image-side ">
+
+                    <p class=" text-white h2">TAKE CARE YOUR HEALTH</p>
+
+                    <p class="white mb-0">
+                        Please use your credentials to login.
+                        <br>If you are not a member, please
+                        <a href="{% url 'accounts:sign_up' %}" style="text-decoration: underline;" class="white">register</a>.
+                    </p>
+                </div>
+                <div class="form-side">
+                    <a href="{% url 'main:index' %}">
+                        <span class="logo-single"></span>
+                    </a>
+                    <h6 class="mb-4">Login</h6>
+                    {% if message %}<div class="alert alert-danger rounded" role="alert">{{ message }}</div>{% endif %}
+                    <form action="{% url 'accounts:sign_in' %}" method="POST">
+                        {% csrf_token %}
+                        <label class="form-group has-float-label mb-4">
+                            <input class="form-control" name="useremail" type="email" id="user_email" placeholder="Please type your email" maxlength="50" required/>
+                            <span>E-mail</span>
+                        </label>
+
+                        <label class="form-group has-float-label mb-4">
+                            <input class="form-control"  name="password" id="user_password" type="password" placeholder="Please type your password" maxlength="50" required />
+                            <span>Password</span>
+                        </label>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="#">Forget password?</a>
+                            <button class="btn btn-primary btn-lg btn-shadow" type="submit">LOGIN</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

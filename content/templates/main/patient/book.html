@@ -1,0 +1,395 @@
+{% extends 'layouts/patient/main.html' %} 
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+            <div class="col-12">
+
+                <h1>Book New Appointment</h1>
+                <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                    <ol class="breadcrumb pt-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">Appointment</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Book</a>
+                        </li>
+                    </ol>
+                </nav>
+                <div class="separator mb-5"></div>
+            </div>
+        <div class="col-12 col-xl-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="mb-4">Date Picker</h5>
+                    <div class="form-group">
+                        <div class="date-inline">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-xl-8 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="mb-4">Booking Time</h5>
+                    <br>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-1.5">
+                                <h5 class="mb-4">From Date</h5>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <select class="form-control" id="fromHour">
+                                <option value="9-AM">9 AM</option>
+                                <option value="10-AM">10 AM</option>
+                                <option value="11-AM">11 AM</option>
+                                <option value="12-AM">12 AM</option>
+                                <option value="1-PM">1 PM</option>
+                                <option value="2-PM">2 PM</option>
+                                <option value="3-PM">3 PM</option>
+                                <option value="4-PM">4 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+
+                            <select class="form-control" id="fromMin">
+                                <option value="0">0</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-1">
+                                <h5 class="mb-4"></h5>
+                        </div>
+
+                        <div class="form-group col-md-1.5">
+                                <h5 class="mb-4">To Date</h5>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            <select class="form-control" id="toHour">
+                                <option value="9-AM">9 AM</option>
+                                <option value="10-AM">10 AM</option>
+                                <option value="11-AM">11 AM</option>
+                                <option value="12-AM">12 AM</option>
+                                <option value="1-PM">1 PM</option>
+                                <option value="2-PM">2 PM</option>
+                                <option value="3-PM">3 PM</option>
+                                <option value="4-PM">4 PM</option>
+                                <option value="5-PM">5 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+
+                            <select class="form-control" id="toMin">
+                                <option value="0">0</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <br>
+                            <br>
+                            <button type="button" class="btn btn-primary btn-block mb-1" onclick="searchDoctor()">Search Available Doctors</button>
+                        </div>
+    
+                    </div>
+    
+
+                </div>
+            </div>
+        </div>
+
+        <!-- booking modal -->
+
+        <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalContentLabel">New Book</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="doctor_pk">
+                            <input type="hidden" id="cur_date">
+                            <input type="hidden" id="cur_from">
+                            <input type="hidden" id="cur_to">
+                            <div class="form-group">
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea class="form-control" id="book-text"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="createBook()">Book</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- modal end -->
+
+        <div class="col-12 col-xl-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row">
+                                <div class="col-12">
+                                        <div class="mb-3">
+                                            <h1>Doctors</h1>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <span class="badge badge-pill badge-success mb-1" id="book_period"></span>
+                                        </div>
+                    
+                                        <!-- <div class="mb-2">
+                                            <a class="btn pt-0 pl-0 d-inline-block d-md-none" data-toggle="collapse" href="#displayOptions"
+                                                role="button" aria-expanded="true" aria-controls="displayOptions">
+                                                Display Options
+                                                <i class="simple-icon-arrow-down align-middle"></i>
+                                            </a>
+                                            <div class="collapse d-md-block" id="displayOptions">
+                                                <div class="d-block d-md-inline-block">
+                                                    <div class="btn-group float-md-left mr-1 mb-1">
+                                                        <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button"
+                                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Order By
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="#">Action</a>
+                                                            <a class="dropdown-item" href="#">Another action</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="search-sm d-inline-block float-md-left mr-1 mb-1 align-top">
+                                                        <input placeholder="Search...">
+                                                    </div>
+                                                </div>
+                                                <div class="float-md-right">
+                                                    <span class="text-muted text-small">Displaying 1-10 of 210 items </span>
+                                                    <button class="btn btn-outline-dark btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        20
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="#">10</a>
+                                                        <a class="dropdown-item active" href="#">20</a>
+                                                        <a class="dropdown-item" href="#">30</a>
+                                                        <a class="dropdown-item" href="#">50</a>
+                                                        <a class="dropdown-item" href="#">100</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="separator mb-5"></div>
+                                    </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 list" id="doctor_container" data-check-all="checkAll">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+//search available doctors in selected peroid
+    function searchDoctor(){
+        var fromHour = $("#fromHour").val();
+        var fromMin = $("#fromMin").val();
+        var toHour = $("#toHour").val();
+        var toMin = $("#toMin").val();
+        var dateStr = $(".date-inline").datepicker('getDate');
+
+        if(dateStr == null){    // if don't select date
+            $.sweetModal({
+                content: 'please select date !.',
+                icon: $.sweetModal.ICON_ERROR,
+                buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+            });
+
+            return;
+        }
+        var from = fromHour.split("-");
+        var to = toHour.split("-");
+        if(from[1] == to[1] && Number(from[0]) > Number(to[0])){    // if selected date is not behind today
+            $.sweetModal({
+                content: 'please select correct time.',
+                icon: $.sweetModal.ICON_ERROR,
+                buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+            });
+
+
+            return;
+        }else if(from[1] == "PM" && to[1] == "AM"){                   // if selected wrong AM, PM
+            $.sweetModal({
+                content: 'please select correct time.',
+                icon: $.sweetModal.ICON_ERROR,
+                buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+            });
+            return;
+
+        }else if(from[1] == to[1] && fromHour == toHour && Number(fromMin) >= Number(toMin)){       // if selected wrong Minute
+            $.sweetModal({
+                content: 'please select correct time.',
+                icon: $.sweetModal.ICON_ERROR,
+                buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+            });
+            return;
+        }
+
+        var current_date = new Date();
+        var date = new Date(dateStr);
+        var timeDiff = date.getTime() - current_date.getTime();
+        if(timeDiff < 0){                      
+            $.sweetModal({
+                content: 'please select correct date time.',
+                icon: $.sweetModal.ICON_ERROR,
+                buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+            });
+            return;
+        }
+        var month = date.getMonth() + 1
+        var datestring = date.getFullYear() + "-" + month + "-" + date.getDate();
+        $("#cur_date").val(datestring);
+        $("#cur_from").val(fromHour+"-"+fromMin);
+        $("#cur_to").val(toHour+"-"+toMin);
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:searchDoctors' %}",
+            data: {date: datestring, from:fromHour+"-"+fromMin,to:toHour+"-"+toMin},
+            dataType: 'json',
+            success: function (data) {
+                if(data != null){
+                    var jsondata = JSON.parse(data)
+                    console.log(jsondata[0].fields);
+                    var period = datestring +"  ( "+from[0]+":" + fromMin +" "+ from[1] +" ~ " + to[0] + ":" + toMin+" "+to[1]+" )";
+                    $("#book_period").html(period)
+                    var html = ""
+                    for(var i = 0; i < jsondata.length; i ++){
+                        var modeldata = jsondata[i];
+
+                        html +="<div class=\"card d-flex flex-row mb-3\">\n" +
+                            "<div class=\"d-flex flex-grow-1 min-width-zero\">\n" +
+                            "<div class=\"card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center\">\n" +
+                            "<a class=\"list-item-heading mb-1 truncate w-40 w-xs-100\" href=\"Layouts.Details.html\">\n" +
+                            modeldata.fields.first_name + "&nbsp;" + modeldata.fields.last_name +"\n" +
+                            "</a>\n" +
+                            "<p class=\"mb-1 text-muted text-small w-15 w-xs-100\">"+modeldata.fields.useremail+"</p>\n" +
+                            "<p class=\"mb-1 text-muted text-small w-15 w-xs-100\">"+modeldata.fields.phone_number+"</p>\n" +
+                            "</div>\n" +
+                            "<div class=\"custom-control custom-checkbox pl-1 align-self-center pr-4\">\n" +
+                            "<button type=\"button\" class=\"btn btn-danger btn-xs mb-1\" onclick=\"newBook("+modeldata.pk+")\">book</button>" +
+                            "</div>\n" +
+                            "</div>\n" +
+                            "</div>\n";
+                    }
+                    $("#doctor_container").html(html);
+
+                }
+            }
+        });
+    }
+
+    function newBook(pk){
+        $("#bookModal").modal();
+        $("#doctor_pk").val(pk);
+        $("#book-text").val("");
+    }
+
+
+//creating new Appointment
+    function createBook(){
+
+        var pk = $("#doctor_pk").val();
+        var book_text = $("#book-text").val();
+        if(book_text.trim() == ""){
+            alert("type some!");
+            return;
+        }
+        var date = $("#cur_date").val();
+        var from = $("#cur_from").val();
+        var to = $("#cur_to").val();
+
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:create_book' %}",
+            data: {date:date,from:from,to:to,pk: pk, book_text:book_text},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == "success"){
+                    $.sweetModal({
+                        content: 'This is a success.',
+                        icon: $.sweetModal.ICON_SUCCESS,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+                }else{
+                    $.sweetModal({
+                        content: 'This is a error.',
+                        icon: $.sweetModal.ICON_ERROR,
+                        buttons: [
+                            {
+                                label: 'That\'s fine',
+                                classes: 'redB'
+                            }
+                        ]                        
+                    });
+
+                }
+            }
+        });
+        $("#bookModal").modal('toggle');
+        location.reload();
+
+    }
+</script>
+{% endblock %}

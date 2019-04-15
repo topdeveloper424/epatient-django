@@ -1,0 +1,81 @@
+{% extends 'layouts/medical/main.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<div class="container-fluid">
+        <div class="row  ">
+            <div class="col-12">
+
+                <h1>Dashboard</h1>
+                <nav class="breadcrumb-container d-none d-sm-block d-lg-inline-block" aria-label="breadcrumb">
+                    <ol class="breadcrumb pt-0">
+                        <li class="breadcrumb-item">
+                            <a href="#">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#">Dashboard</a>
+                        </li>
+                    </ol>
+                </nav>
+                <div class="separator mb-5"></div>
+
+
+            </div>
+        </div>
+
+        <div class="row" id="incoming_container">
+
+
+            
+        </div>
+
+</div>
+        <script>
+    localStorage.tab = 1;
+
+            // display incoming appointment for this week
+            $(document).ready(function(){
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'main:incoming_appoint' %}",
+                    success: function (data) {
+                        console.log(data);
+                        var html = "";
+                        if(data != ""){
+                            var jsondata = JSON.parse(data);
+                            for(var i = 0; i < jsondata.length; i ++){
+                                var modeldata = jsondata[i];
+                                html +="            <div class=\"col-md-6\">\n" +
+                                    "                <div class=\"icon-cards-row mb-4\">\n" +
+                                    "                    <a onclick=\"viewIncoming("+modeldata.pk+")\" class=\"card\">\n" +
+                                    "                        <div class=\"card-body text-center\">\n" +
+                                    "                            <i class=\"iconsmind-Alarm\"></i>\n" +
+                                    "                            <p class=\"card-text font-weight-semibold mb-0\">Incoming Appointmennt</p>\n" +
+                                    "                            <p class=\"lead text-center\">"+modeldata.fields.book_date+"  ("+modeldata.fields.from_time+"~"+modeldata.fields.to_time+")</p>\n" +
+                                    "                        </div>\n" +
+                                    "                    </a>\n" +
+                                    "                </div>\n" +
+                                    "            </div>\n";
+
+                            }
+
+                            $("#incoming_container").html(html);
+
+
+                        }else{
+
+                            html +="            <div class=\"col-md-12\">\n" +
+                                    "<h4>There is no Incoming Appointments</h4>"+
+                                    "            </div>\n";
+
+                            $("#incoming_container").html(html);
+
+
+                        }
+                    }
+                });
+
+
+            });
+        </script>
+{% endblock %}

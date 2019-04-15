@@ -1,0 +1,274 @@
+{% extends 'layouts/medical/main.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Appointments</h1>
+            <div class="separator mb-5"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="searchFirstName" placeholder="First Name">
+        </div>    
+        <div class="col-md-2">
+            <input type="text" class="form-control" id="searchLastName" placeholder="Last Name">
+        </div>    
+    
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+                <button type="button" class="btn btn-success btn-xs mb-1" onclick="searchModal()">Search by Birthday</button>
+        </div>
+        
+    </div>
+
+    <div class="row">
+        <div class="col-12 list" id="user_container">
+                <br>
+            {% if user %}
+            {% for user in users %}
+
+            <div class="card d-flex flex-row mb-3">
+                    <div class="d-flex flex-grow-1 min-width-zero">
+                        <div class="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                            <a class="list-item-heading mb-1 truncate w-10 w-xs-100" onclick="gotoPatientPage({{user.pk}})" style="cursor:pointer">
+                                <span class="badge badge-pill badge-secondary">{{user.first_name}}  {{user.last_name}}</span>
+                            </a>
+                            <p class="mb-1 text-muted text-small w-10 w-xs-100">{{user.useremail}}</p>
+                            <p class="mb-1 text-muted text-small w-10 w-xs-100">{{user.birthday}}</p>
+                            <p class="mb-1 text-muted text-small w-10 w-xs-100">{% if user.gender == 'M' %} Male {% else %} Female {% endif %}</p>
+                            <p class="mb-1 text-muted text-small w-10 w-xs-100">{{user.phone_number}}</p>
+                            <p class="mb-1 text-muted text-small w-15 w-xs-100">{{user.address}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalContentLabel">Search by birthday</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="curPatient">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Year:</b></label>
+                        <input type="text" class="form-control" id="searchYear" placeholder="Year" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Month:</b></label>
+                        <input type="text" class="form-control" id="searchMonth" placeholder="Month" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Day:</b></label>
+                        <input type="text" class="form-control" id="searchDay" placeholder="Day" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onfocus="this.value = this.value;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="search()">Search</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="appointModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalContentLabel">Problem Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="curPatient">
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Patient Name:</b></label>
+                        <span id="patientName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Updated Date:</b></label>
+                        <span id="createdDate"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label"><b>Book Text</b></label>
+                        <textarea class="form-control" id="decription-text" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="gotoPatientPage()">Go to Patient Info Page</button>
+                    &nbsp;
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+
+    localStorage.tab = 1;
+
+    function gotoPatientPage(pk) {
+        window.open("{% url 'main:patient_info_user' %}?pk=" + pk);
+    }
+
+    function searchModal(){
+        $("#searchYear").val("");
+        $("#searchMonth").val("");
+        $("#searchDay").val("");
+        $("#searchModal").modal();
+
+    }
+
+    function search(){
+        var year = $("#searchYear").val();
+        var month = $("#searchMonth").val();
+        var day = $("#searchDay").val();
+        if(year == ""){
+            alert("type Year!");
+            return;
+        }
+        if(year.length != 4 || month.length > 2 || day.length > 2){
+            alert("type correct birthday !");
+            return;
+        }
+        if(month != ""){
+            if(Number(month) > 12){
+                alert("type correct month !");
+                return;
+            }
+        }
+        if(day != ""){
+            if(Number(day) > 31){
+                alert("type correct day !");
+                return;
+            }
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'main:search_patients' %}",
+            data: {year:year,month:month,day:day },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data !=""){
+                    var jsondata = JSON.parse(data);
+                    var html = "<br>";
+                    for(var i = 0; i < jsondata.length; i ++){
+                        var model = jsondata[i];
+                        var gender = "Male";
+                        if(model.fields.gender == 'F'){
+                            gender = "Female";
+                        }
+                        html += "            <div class=\"card d-flex flex-row mb-3\">\n" +
+            "                    <div class=\"d-flex flex-grow-1 min-width-zero\">\n" +
+            "                        <div class=\"card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center\">\n" +
+            "                            <a class=\"list-item-heading mb-1 truncate w-10 w-xs-100\" onclick=\"gotoPatientPage("+model.pk+")\" style=\"cursor:pointer\">\n" +
+            "                                <span class=\"badge badge-pill badge-secondary\">"+model.fields.first_name+" "+model.fields.last_name+"</span>\n" +
+            "                            </a>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.useremail+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.birthday+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+gender+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.phone_number+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-15 w-xs-100\">"+model.fields.address+"</p>\n" +
+            "                        </div>\n" +
+            "                    </div>\n" +
+            "                </div>\n";
+
+                    }
+
+                    $("#user_container").html(html);
+                }else{
+                    $("#user_container").html("");
+                }
+
+                $("#searchModal").modal('hide');
+                
+            }
+        });
+
+    }
+
+    function searchByNames(){
+        var first_name = $("#searchFirstName").val();
+            var last_name = $("#searchLastName").val();
+            $.ajax({
+            type: "GET",
+            url: "{% url 'main:search_patients_name' %}",
+            data: {first_name:first_name, last_name:last_name },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                if(data !=""){
+                    var jsondata = JSON.parse(data);
+                    var html = "<br>";
+                    for(var i = 0; i < jsondata.length; i ++){
+                        var model = jsondata[i];
+                        var gender = "Male";
+                        if(model.fields.gender == 'F'){
+                            gender = "Female";
+                        }
+                        html += "            <div class=\"card d-flex flex-row mb-3\">\n" +
+            "                    <div class=\"d-flex flex-grow-1 min-width-zero\">\n" +
+            "                        <div class=\"card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center\">\n" +
+            "                            <a class=\"list-item-heading mb-1 truncate w-10 w-xs-100\" onclick=\"gotoPatientPage("+model.pk+")\" style=\"cursor:pointer\">\n" +
+            "                                <span class=\"badge badge-pill badge-secondary\">"+model.fields.first_name+" "+model.fields.last_name+"</span>\n" +
+            "                            </a>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.useremail+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.birthday+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+gender+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-10 w-xs-100\">"+model.fields.phone_number+"</p>\n" +
+            "                            <p class=\"mb-1 text-muted text-small w-15 w-xs-100\">"+model.fields.address+"</p>\n" +
+            "                        </div>\n" +
+            "                    </div>\n" +
+            "                </div>\n";
+
+                    }
+
+                    $("#user_container").html(html);
+                }else{
+                    $("#user_container").html("");
+                }
+
+                $("#searchModal").modal('hide');
+                
+            }
+        });
+
+    }
+    $("#searchFirstName").on('keyup',function (e) {
+        if(e.keyCode == 13){
+            searchByNames();
+        }
+    });
+
+    $("#searchLastName").on('keyup',function (e) {
+        if(e.keyCode == 13){
+            searchByNames();
+        }
+    });
+
+</script>
+
+
+{% endblock %}

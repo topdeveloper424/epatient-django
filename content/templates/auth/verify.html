@@ -1,0 +1,95 @@
+{% extends 'layouts/auth.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="row h-100">
+        <div class="col-12 col-md-10 mx-auto my-auto">
+            <div class="card auth-card">
+                <div class="position-relative image-side ">
+
+                    <p class=" text-white h2">TAKE CARE YOUR HEALTH</p>
+
+                    <p class="white mb-0">
+                        Please use your phone number.
+                        <br>If you don't want to verify your phone number, verify your email, please
+                    </p>
+                </div>
+                <div class="form-side">
+                    <a href="{% url 'main:index' %}">
+                        <span class="logo-single"></span>
+                    </a>
+                    <h6 class="mb-4">We just sent verify code to your phone. Please type the code !</h6>
+                    {% if success %}<div class="alert alert-success rounded" role="alert">{{ success }}</div>{% endif %}
+                    <a style="text-decoration: underline; cursor: pointer;" onclick="resend()">resend code</a>
+                    <br>
+                    <br>
+                    <div class="alert alert-danger rounded" id="errorAlert" role="alert" style="display: none"></div>
+                    <div class="alert alert-success rounded" id="sentAlert" role="alert" style="display: none">just sent!</div>
+                        <label class="form-group has-float-label mb-4">
+                            <input class="form-control"  name="code" id="code"  placeholder="Please type verify code" maxlength="20" required />
+                            <span>{{phone_number}}</span>
+                        </label>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{% url 'accounts:verify_email' %}" style="text-decoration: underline;">verify with email</a>
+                            <button class="btn btn-primary btn-lg btn-shadow" onclick="verify()">SUBMIT</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function verify()
+        {
+            verify_code = $("#code").val();
+            if(verify_code == ""){
+                alert("Please type verify code !");
+                return;
+            }
+            $.ajax({
+            type: "GET",
+            url: "{% url 'accounts:verify' %}",
+            data: {code: verify_code},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == "success"){
+                    window.location.href = "{% url 'main:dashboard' %}"
+                }else if(data.status == "incorrect"){
+                    var errorAlert = document.getElementById("errorAlert")
+                    errorAlert.innerText = "the verify code is incorrect !";
+                    errorAlert.style.display = "block";
+                }else if(data.status == "timeout"){
+                    var errorAlert = document.getElementById("errorAlert")
+                    errorAlert.innerText = "timeout ! try again";
+                    errorAlert.style.display = "block";
+                }
+                
+            }
+        });
+        }
+        function resend(){
+            $.ajax({
+            type: "GET",
+            url: "{% url 'accounts:resend_code' %}",
+            data: {mode: 0},
+            dataType: 'json',
+            success: function (data) {
+                if(data.status == "sent"){
+                    var errorAlert = document.getElementById("errorAlert")
+                    errorAlert.style.display = "none";
+                    var sentAlert = document.getElementById("sentAlert")
+                    sentAlert.style.display = "block";
+                }else if(data.status == "error"){
+                    var errorAlert = document.getElementById("errorAlert")
+                    errorAlert.innerText = "error happened !";
+                    errorAlert.style.display = "block";
+                    var sentAlert = document.getElementById("sentAlert")
+                    sentAlert.style.display = "none";
+                }
+            }
+        });
+
+        }
+    </script>
+{% endblock %}
+
+
