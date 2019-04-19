@@ -2,7 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.exe
+my_db_config/
 
+!main.pyc
 # C extensions
 *.so
 
