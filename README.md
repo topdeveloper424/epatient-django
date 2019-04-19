@@ -76,10 +76,11 @@ $ python3 manage.py migrate
 
 #### Building for source
 For production release:
-ALLOWED_HOSTS = ['*'] 
+  -ALLOWED_HOSTS = ['*']
+
 Edit settings.py to look for static files in a directory called static in our root directory:
-STATIC_URL = '/python/static/'
-STATIC_ROOT = '/usr/local/lsws/Example/demo/public/static'
+  -STATIC_URL = '/python/static/'
+  -STATIC_ROOT = '/usr/local/lsws/Example/demo/public/static'
 
 Collect static files:
 ```sh
