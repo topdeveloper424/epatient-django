@@ -10,6 +10,8 @@ E-Patient is healthcare website, book appointments and view health records.
   - See HTML in the right
   - Magic
 
+![Screenshot_31](https://user-images.githubusercontent.com/40516126/56431009-fd264300-62fa-11e9-969f-71eca9d5514e.png)
+
 # Features!
 
   - 2 factor authentication(email verification and phone number verificaiton)
