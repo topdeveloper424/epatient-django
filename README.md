@@ -30,6 +30,8 @@ There are 3 user levels:
 * [administrator] - manage all users, (add,delete)
 * [doctor] - view Health records and acept appointments
 * [patient] - Search doctors and book appointments.
+![Screenshot_33](https://user-images.githubusercontent.com/40516126/56431288-c43a9e00-62fb-11e9-99c7-f285281d4058.png)
+
 
 ### Installation
 
