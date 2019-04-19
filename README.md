@@ -24,7 +24,7 @@ You can also:
   - Export documents as Markdown, HTML and PDF
 
 ### User Levels
-
+![Screenshot_32](https://user-images.githubusercontent.com/40516126/56431124-54c4ae80-62fb-11e9-877f-61eab730f647.png)
 There are 3 user levels:
 
 * [administrator] - manage all users, (add,delete)
