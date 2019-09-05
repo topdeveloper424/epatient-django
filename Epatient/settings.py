@@ -124,8 +124,8 @@ SMS_FROM_PHONE = '+12674330787'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-FROM_EMAIL = 'mingming424224@gmail.com'
-EMAIL_PASSWORD = 'won424224'
+FROM_EMAIL = ''
+EMAIL_PASSWORD = ''
 
 
 VERIFY_TIME = 500
