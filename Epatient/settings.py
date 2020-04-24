@@ -118,9 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-SMS_SID = 'ACbb1acb7fd62d51edbc7cba4fdc498a21'
-SMS_TOKEN = '19dc803c19b892a1a0d8429955263d37'
-SMS_FROM_PHONE = '+12674330787'
+SMS_SID = 'xxx'
+SMS_TOKEN = 'xxx'
+SMS_FROM_PHONE = 'xxx'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
